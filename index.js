@@ -16,15 +16,14 @@ const formatQueryParams = function(params){
 const displayResults = function(Json){
     $('#results-list').empty();
     for(let i = 0 ; i < Json.data.length ; i++){
-        $('#resluts-list').append(
+        $('#results-list').append(
             `<li>
-            <h4>${Json.data[i].fullname}</h4>
+            <h4>${Json.data[i].fullName}</h4>
             <p>${Json.data[i].description}</p>
             <p><a href="${Json.data[i].url}">Link</a></p>
             </li>`
-        );
-        $('#results').removeClass('hidden');
-    };
+        )};
+    $('#results').removeClass('hidden');
 };
 
 const getNationalPark = function(code){
@@ -32,10 +31,13 @@ const getNationalPark = function(code){
     let stateCodeStr = '';
     for(let i = 0 ; i < stateCode.length; i++){
         stateCodeStr += `${stateCode[i].trim().toUpperCase()}`}
-    let url = `${searchURL}?statecode=${stateCodeStr}&api_key=${api_Key}`;
+    let url = `${searchURL}?statecode=${stateCodeStr}&api_key=${api_Key}&limit=10`;
     console.log(url);
     
-    fetch(url)
+    fetch(url, {
+        header: {
+            'content-Type' : 'application/json'}
+        })
     .then(response=>{
         if(response.ok){
             return response.json();
@@ -54,8 +56,7 @@ function watchForm(){
     $('#js-form').on('submit', event=>{
         event.preventDefault();
         const searchTerm = $('#js-search-form').val();
-        const maxResults = $('#js-max-results').val();
-        getNationalPark(searchTerm, maxResults);
+        getNationalPark(searchTerm);
 });
 }
 
