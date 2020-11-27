@@ -10,12 +10,12 @@
     <div class="container">
         <h1>The National Parks Services</h1>
         <form id="js-form">
-            <label for="js-search-form">Search</label>
+            <label for="js-search-form">State Search</label>
             <input type="text" name="search" id="js-search-form" required>
+            <label for="js-max-results">max results</label>
+            <input type="number" id="js-max-results" value="10">
             <br>
-            <label for="js-max-results">Max Results</label>
-            <input type="number" name="max-results" id="js-max-results" value="10">
-            <input type="button" value="search">
+            <input type="submit" value="search">
         </form>
 
         <p id="js-error-message" class="error-message"></p>

@@ -1,58 +1,61 @@
+/* eslint-disable no-const-assign */
 /* eslint-disable no-extra-semi */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 'use strict';
 
-const apiKey = 'fSQcVK1MgehUr8iuInscSsY8ea6edl4QP7ULzi5k';
-const searchURL = 'https://developer.nps.gov/api/v1/park';
+const api_Key = 'baKcjUccFZiqktIJ3nDaQUnesn8L4wmZmQokaaKW';
+const searchURL = 'https://developer.nps.gov/api/v1/parks';
 
-function formatQueryParams(){
-    const queryItems = Object.keys(params)
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-    return queryItems.join('&');
+const formatQueryParams = function(params){
+    const queryItem = Object.keys(params)
+             .map(key => `${(key)}=${(params[key])}}`)
+    return queryItem.join('&');
 }
 
-function displayResult(Json){
-    console.log(Json);
+const displayResults = function(Json){
     $('#results-list').empty();
-    for(let i = 0 ; i < Json.item.length ; i++){
-        $('#results-list').append(
-            `<li><h3><a href="${Json.item[i].url}">${Json.item[i].title}</h3>
-            <p>${Json.item[i].description}</p>
+    for(let i = 0 ; i < Json.data.length ; i++){
+        $('#resluts-list').append(
+            `<li>
+            <h4>${Json.data[i].fullname}</h4>
+            <p>${Json.data[i].description}</p>
+            <p><a href="${Json.data[i].url}">Link</a></p>
             </li>`
-        )};
+        );
         $('#results').removeClass('hidden');
-}
-
-function getNationalParkArea(query, maxResults = 10){
-    const params = {
-        key: apiKey ,
-        q: query , 
-        pageSize: maxResults
     };
-    const queryString = formatQueryParams(params)
-    const url = searchURL + '?' + queryString ;
+};
+
+const getNationalPark = function(code){
+    let stateCode = code.split(',');
+    let stateCodeStr = '';
+    for(let i = 0 ; i < stateCode.length; i++){
+        stateCodeStr += `${stateCode[i].trim().toUpperCase()}`}
+    let url = `${searchURL}?statecode=${stateCodeStr}&api_key=${api_Key}`;
     console.log(url);
+    
     fetch(url)
     .then(response=>{
-        if (response.ok){
+        if(response.ok){
             return response.json();
         }
         throw new Error(response.statusText);
     })
-    .then(Json => displayResult(Json))
-    .catch(e => {
-        $('#.js-error-message').text(`Something went wrong: ${e.mseeage}`);
+    .then(Json=> displayResults(Json))
+    .catch((e)=>{
+        $('#js-error-message').text(`Something went wrong: ${e.message}`);
     });
 }
 
 
+
 function watchForm(){
-    $('form').on('submit', event=>{
+    $('#js-form').on('submit', event=>{
         event.preventDefault();
         const searchTerm = $('#js-search-form').val();
         const maxResults = $('#js-max-results').val();
-        getNationalParkArea(searchTerm, maxResults);
+        getNationalPark(searchTerm, maxResults);
 });
 }
 
